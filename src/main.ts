@@ -15,6 +15,6 @@ async function bootstrap() {
   app.useGlobalFilters(new ErrorFilter());
   app.useGlobalFilters(new HttpErrorFilter());
 
-  await app.listen(3000);
+  await app.listen(3010);
 }
 bootstrap();

@@ -22,7 +22,7 @@ export class CreateTodoListHandler
     const result = await this.todoListRepository.create({ todoList });
     await this.userRepository.addTodoList({
       id: todoList.user.id,
-      ticketId: result.id,
+      listId: result.id,
     });
     return result;
   }

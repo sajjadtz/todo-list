@@ -7,10 +7,10 @@ export interface IUserRepository {
   getUserByUsername(data: Pick<IUser, 'username'>): Promise<IUser>;
   addTodoList(data: {
     id: string | number;
-    ticketId: string | number;
+    listId: string | number;
   }): Promise<void>;
   removeTodoList(data: {
     id: string | number;
-    ticketId: string | number;
+    listId: string | number;
   }): Promise<void>;
 }

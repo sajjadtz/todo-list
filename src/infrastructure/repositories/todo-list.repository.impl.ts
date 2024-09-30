@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ITodoListRepository } from 'src/domain/repositories/todo-list.repository';
@@ -10,9 +9,26 @@ import { IUser } from 'src/domain/entities/user.entity';
 @Injectable()
 export class TodoListRepositoryImpl implements ITodoListRepository {
   constructor(
-    private readonly configService: ConfigService,
     @InjectModel(TodoList.name) private todoListModel: Model<TodoList>,
   ) {}
+
+  async findById(id: string | number): Promise<ITodoList> {
+    return (
+      await this.todoListModel.findOne(
+        {
+          _id: id,
+        },
+        {},
+        {
+          populate: [
+            {
+              path: 'items',
+            },
+          ],
+        },
+      )
+    ).toJSON();
+  }
 
   async create({
     todoList,
@@ -57,6 +73,42 @@ export class TodoListRepositoryImpl implements ITodoListRepository {
       'user.id': user.id,
     });
 
+    return;
+  }
+
+  async addTodoListItem({
+    id,
+    itemId,
+  }: {
+    id: string | number;
+    itemId: string | number;
+  }): Promise<void> {
+    await this.todoListModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $push: { items: itemId },
+      },
+    );
+    return;
+  }
+
+  async removeTodoListItem({
+    id,
+    itemId,
+  }: {
+    id: string | number;
+    itemId: string | number;
+  }): Promise<void> {
+    await this.todoListModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $pull: { items: itemId },
+      },
+    );
     return;
   }
 }

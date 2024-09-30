@@ -1,21 +1,13 @@
 import { ITodoListItem } from '../entities/todo-list-item.entity';
-import { IUser } from '../entities/user.entity';
 
 export interface ITodoListItemRepository {
-  create(data: {
-    todoListItem: Omit<ITodoListItem, 'priority'>;
-    user: IUser;
-  }): Promise<void>;
+  findById(id: string | number): Promise<ITodoListItem>;
+  create(data: { todoListItem: ITodoListItem }): Promise<ITodoListItem>;
   update(data: {
     id: string | number;
-    user: IUser;
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
+    priority?: string;
   }): Promise<void>;
-  delete(data: { id: string | number; user: IUser }): Promise<void>;
-  move(data: {
-    id: string | number;
-    user: IUser;
-    next: ITodoListItem;
-  }): Promise<void>;
+  delete(data: { id: string | number }): Promise<ITodoListItem>;
 }

@@ -16,6 +16,7 @@ export class TodoList extends Document implements ITodoList {
   })
   user: IUser;
 
+  @Prop({ type: [Types.ObjectId], default: [], ref: 'TodoListItem' })
   items: ITodoListItem[];
 }
 

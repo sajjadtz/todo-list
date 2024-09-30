@@ -12,6 +12,12 @@ import { CreateTodoListHandler } from './application/query/handler/create-todo-l
 import { DeleteTodoListHandler } from './application/command/handler/delete-todo-list.handler';
 import { UpdateTodoListHandler } from './application/query/handler/update-todo-list.handler';
 import { TodoListController } from './presentation/controllers/todo-list.controller';
+import { CreateTodoListItemHandler } from './application/command/handler/create-todo-list-item.handler';
+import { DeleteTodoListItemHandler } from './application/command/handler/delete-todo-list-item.handler';
+import { UpdateTodoListItemHandler } from './application/command/handler/update-todo-list-item.handler';
+import { TodoListItemController } from './presentation/controllers/todo-list-item.controller';
+import { MoveTodoListItemHandler } from './application/command/handler/move-todo-list-item.handler';
+import { FindTodoListByIdHandler } from './application/query/handler/find-todo-list-by-id.handler';
 
 @Module({
   imports: [
@@ -22,7 +28,7 @@ import { TodoListController } from './presentation/controllers/todo-list.control
     DatabaseModule,
     CqrsModule,
   ],
-  controllers: [UserController, TodoListController],
+  controllers: [UserController, TodoListController, TodoListItemController],
   providers: [
     SignUpUserHandler,
     FindUserByUsernameHandler,
@@ -31,6 +37,11 @@ import { TodoListController } from './presentation/controllers/todo-list.control
     CreateTodoListHandler,
     UpdateTodoListHandler,
     DeleteTodoListHandler,
+    CreateTodoListItemHandler,
+    UpdateTodoListItemHandler,
+    DeleteTodoListItemHandler,
+    MoveTodoListItemHandler,
+    FindTodoListByIdHandler,
   ],
 })
 export class AppModule {}

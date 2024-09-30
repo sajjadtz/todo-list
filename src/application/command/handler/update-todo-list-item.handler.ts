@@ -1,11 +1,29 @@
-import { ICommand } from '@nestjs/cqrs';
-import { IUser } from 'src/domain/entities/user.entity';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UpdateTodoListItemCommand } from '../interface/update-todo-list-item.command';
+import { ITodoListItemRepository } from 'src/domain/repositories/todo-list-item.repository';
 
-export class DeleteTodoListItemCommand implements ICommand {
-  constructor(
-    readonly id: string | number,
-    readonly user: IUser,
-    readonly title: string,
-    readonly description: string,
-  ) {}
+@CommandHandler(UpdateTodoListItemCommand)
+export class UpdateTodoListItemHandler
+  implements ICommandHandler<UpdateTodoListItemCommand, void>
+{
+  @Inject('ITodoListItemRepository')
+  private readonly todoListItemRepository: ITodoListItemRepository;
+
+  async execute({
+    id,
+    description,
+    title,
+  }: {
+    id: string | number;
+    title: string;
+    description: string;
+  }): Promise<void> {
+    await this.todoListItemRepository.update({
+      id,
+      description,
+      title,
+    });
+    return;
+  }
 }

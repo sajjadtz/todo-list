@@ -25,7 +25,7 @@ export class DeleteTodoListHandler
 
     await this.userRepository.removeTodoList({
       id: user.id,
-      ticketId: id,
+      listId: id,
     });
     return;
   }

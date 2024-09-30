@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Patch,
+  Get,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
@@ -15,6 +16,8 @@ import { CreateTodoListDto } from '../dto/todo-list/create-todo-list.dto';
 import { DeleteTodoListCommand } from 'src/application/command/interface/delete-todo-list.command';
 import { CreateTodoListQuery } from 'src/application/query/interface/create-todo-list.query';
 import { UpdateTodoListQuery } from 'src/application/query/interface/update-todo-list.query';
+import { TodoListDto } from '../dto/todo-list/todo-list.dto';
+import { FindTodoListByIdQuery } from 'src/application/query/interface/find-todo-list-by-id.query';
 
 @Controller('todo-list')
 export class TodoListController {
@@ -22,6 +25,17 @@ export class TodoListController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  async getTodoList(
+    @Param('id') id: string,
+    @CurrentUser() user: IUser,
+  ): Promise<TodoListDto> {
+    return await this.queryBus.execute(
+      new FindTodoListByIdQuery(id, user),
+    );
+  }
 
   @Post('/')
   @UseGuards(JwtAuthGuard)
@@ -51,7 +65,7 @@ export class TodoListController {
 
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
-  async login(
+  async deleteTodoList(
     @Param('id') id: string,
     @CurrentUser() user: IUser,
   ): Promise<void> {

@@ -72,17 +72,17 @@ export class UserRepositoryImpl implements IUserRepository {
 
   async addTodoList({
     id,
-    ticketId,
+    listId,
   }: {
     id: string | number;
-    ticketId: string | number;
+    listId: string | number;
   }): Promise<void> {
     await this.userModel.findOneAndUpdate(
       {
         _id: id,
       },
       {
-        $push: { lists: ticketId },
+        $push: { lists: listId },
       },
     );
     return;
@@ -90,17 +90,17 @@ export class UserRepositoryImpl implements IUserRepository {
 
   async removeTodoList({
     id,
-    ticketId,
+    listId,
   }: {
     id: string | number;
-    ticketId: string | number;
+    listId: string | number;
   }): Promise<void> {
     await this.userModel.findOneAndUpdate(
       {
         _id: id,
       },
       {
-        $pull: { lists: ticketId },
+        $pull: { lists: listId },
       },
     );
     return;
