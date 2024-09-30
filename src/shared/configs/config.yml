@@ -1,0 +1,6 @@
+app:
+  secret: Wst5U^$W9T%i#@m6v
+  tokenExpireTime: 1d
+
+mongo:
+  url: 'mongodb://localhost:27023/todo'
