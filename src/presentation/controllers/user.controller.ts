@@ -21,7 +21,7 @@ export class UserController {
     return user;
   }
 
-  @Post('/sing-up')
+  @Post('/sign-up')
   async signUp(@Body() user: SignUpUserDto): Promise<void> {
     return await this.commandBus.execute(
       new SignUpUserCommand(user.username, user.password),

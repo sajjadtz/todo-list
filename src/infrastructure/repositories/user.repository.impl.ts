@@ -22,17 +22,15 @@ export class UserRepositoryImpl implements IUserRepository {
     return (await this.userModel.findOne({ username })).toJSON();
   }
 
-  async signUp({
-    user,
-  }: {
-    user: Omit<IUser, 'lists'>;
-  }): Promise<ILoginResponse> {
+  async signUp({ user }: { user: Omit<IUser, 'lists'> }): Promise<void> {
     const salt = await genSalt(10);
-    user.password = await hash(user.password, salt);
 
-    await this.userModel.create(user);
+    await this.userModel.create({
+      ...user,
+      password: await hash(user.password, salt),
+    });
 
-    return await this.login(user);
+    return;
   }
 
   async login({
@@ -43,6 +41,7 @@ export class UserRepositoryImpl implements IUserRepository {
     password: string;
   }): Promise<ILoginResponse> {
     const user = await this.getUserByUsername({ username });
+
     if (!user || !(await compare(password, user.password))) {
       throw 'unauthorized';
     }
