@@ -57,4 +57,40 @@ export class UserRepositoryImpl implements IUserRepository {
       user,
     };
   }
+
+  async addTodoList({
+    id,
+    ticketId,
+  }: {
+    id: string | number;
+    ticketId: string | number;
+  }): Promise<void> {
+    await this.userModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $push: { lists: ticketId },
+      },
+    );
+    return;
+  }
+
+  async removeTodoList({
+    id,
+    ticketId,
+  }: {
+    id: string | number;
+    ticketId: string | number;
+  }): Promise<void> {
+    await this.userModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $pull: { lists: ticketId },
+      },
+    );
+    return;
+  }
 }

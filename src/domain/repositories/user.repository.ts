@@ -5,4 +5,12 @@ export interface IUserRepository {
   signUp(data: { user: Omit<IUser, 'lists'> }): Promise<void>;
   login(data: Omit<IUser, 'lists'>): Promise<ILoginResponse>;
   getUserByUsername(data: Pick<IUser, 'username'>): Promise<IUser>;
+  addTodoList(data: {
+    id: string | number;
+    ticketId: string | number;
+  }): Promise<void>;
+  removeTodoList(data: {
+    id: string | number;
+    ticketId: string | number;
+  }): Promise<void>;
 }

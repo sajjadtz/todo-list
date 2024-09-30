@@ -11,6 +11,7 @@ export class User extends Document implements IUser {
   @Prop({ required: true })
   password: string;
 
+  @Prop({ type: Object, default: [] })
   lists: ITodoList[];
 }
 

@@ -8,6 +8,10 @@ import { SignUpUserHandler } from './application/command/handler/sign-up-user.ha
 import { FindUserByUsernameHandler } from './application/query/handler/find-user-by-username.handler';
 import { LoginHandler } from './application/query/handler/login-user.handler';
 import { JwtStrategy } from './presentation/auth-strategy/jwt.strategy';
+import { CreateTodoListHandler } from './application/query/handler/create-todo-list.handler';
+import { DeleteTodoListHandler } from './application/command/handler/delete-todo-list.handler';
+import { UpdateTodoListHandler } from './application/query/handler/update-todo-list.handler';
+import { TodoListController } from './presentation/controllers/todo-list.controller';
 
 @Module({
   imports: [
@@ -18,12 +22,15 @@ import { JwtStrategy } from './presentation/auth-strategy/jwt.strategy';
     DatabaseModule,
     CqrsModule,
   ],
-  controllers: [UserController],
+  controllers: [UserController, TodoListController],
   providers: [
     SignUpUserHandler,
     FindUserByUsernameHandler,
     LoginHandler,
     JwtStrategy,
+    CreateTodoListHandler,
+    UpdateTodoListHandler,
+    DeleteTodoListHandler,
   ],
 })
 export class AppModule {}
