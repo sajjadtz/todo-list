@@ -19,7 +19,19 @@ export class UserRepositoryImpl implements IUserRepository {
   ) {}
 
   async getUserByUsername({ username }: { username: string }): Promise<IUser> {
-    return (await this.userModel.findOne({ username })).toJSON();
+    return (
+      await this.userModel.findOne(
+        { username },
+        {},
+        {
+          populate: [
+            {
+              path: 'lists',
+            },
+          ],
+        },
+      )
+    ).toJSON();
   }
 
   async signUp({ user }: { user: Omit<IUser, 'lists'> }): Promise<void> {
