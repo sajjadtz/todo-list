@@ -1,7 +1,7 @@
-import { IQuery } from '@nestjs/cqrs';
+import { ICommand } from '@nestjs/cqrs';
 import { IUser } from 'src/domain/entities/user.entity';
 
-export class UpdateTodoListQuery implements IQuery {
+export class UpdateTodoListCommand implements ICommand {
   constructor(
     readonly id: string | number,
     readonly user: IUser,

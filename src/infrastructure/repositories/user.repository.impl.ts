@@ -65,6 +65,7 @@ export class UserRepositoryImpl implements IUserRepository {
     const { secret, tokenExpireTime } = this.configService.get<AppConfig>(
       AppConfigs.APP,
     );
+    delete user.password;
 
     return {
       accessToken: jwt.sign(user, secret, {

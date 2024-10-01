@@ -7,7 +7,8 @@ import { LoginQuery } from 'src/application/query/interface/login-user.query';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 import { IUser } from 'src/domain/entities/user.entity';
 import { CurrentUser } from 'src/shared/decorator/current-user.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { LoginResponseDto } from '../dto/user/login-response.dto';
 
 @Controller('users')
 export class UserController {
@@ -31,7 +32,8 @@ export class UserController {
   }
 
   @Post('/login')
-  async login(@Body() user: SignUpUserDto): Promise<void> {
+  @ApiOkResponse({ type: LoginResponseDto })
+  async login(@Body() user: SignUpUserDto): Promise<LoginResponseDto> {
     return await this.queryBus.execute(
       new LoginQuery(user.username, user.password),
     );

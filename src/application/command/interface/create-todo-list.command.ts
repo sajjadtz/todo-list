@@ -1,6 +1,6 @@
-import { IQuery } from '@nestjs/cqrs';
+import { ICommand } from '@nestjs/cqrs';
 import { ITodoList } from 'src/domain/entities/todo-list.entity';
 
-export class CreateTodoListQuery implements IQuery {
+export class CreateTodoListCommand implements ICommand {
   constructor(readonly todoList: Omit<ITodoList, 'items'>) {}
 }

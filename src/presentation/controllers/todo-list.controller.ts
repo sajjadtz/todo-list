@@ -14,8 +14,8 @@ import { IUser } from 'src/domain/entities/user.entity';
 import { CurrentUser } from 'src/shared/decorator/current-user.decorator';
 import { CreateTodoListDto } from '../dto/todo-list/create-todo-list.dto';
 import { DeleteTodoListCommand } from 'src/application/command/interface/delete-todo-list.command';
-import { CreateTodoListQuery } from 'src/application/query/interface/create-todo-list.query';
-import { UpdateTodoListQuery } from 'src/application/query/interface/update-todo-list.query';
+import { CreateTodoListCommand } from 'src/application/command/interface/create-todo-list.command';
+import { UpdateTodoListCommand } from 'src/application/command/interface/update-todo-list.command';
 import { TodoListDto } from '../dto/todo-list/todo-list.dto';
 import { FindTodoListByIdQuery } from 'src/application/query/interface/find-todo-list-by-id.query';
 import { ApiParam, ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
@@ -40,13 +40,12 @@ export class TodoListController {
 
   @Post('/')
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ type: TodoListDto })
   async createTodoList(
     @Body() todoList: CreateTodoListDto,
     @CurrentUser() user: IUser,
-  ): Promise<TodoListDto> {
-    return await this.queryBus.execute(
-      new CreateTodoListQuery({
+  ): Promise<void> {
+    return await this.commandBus.execute(
+      new CreateTodoListCommand({
         title: todoList.title,
         user: { id: user.id },
       }),
@@ -62,8 +61,8 @@ export class TodoListController {
     @Body() todoList: CreateTodoListDto,
     @CurrentUser() user: IUser,
   ): Promise<void> {
-    return await this.queryBus.execute(
-      new UpdateTodoListQuery(id, user, todoList.title),
+    return await this.commandBus.execute(
+      new UpdateTodoListCommand(id, user, todoList.title),
     );
   }
 
