@@ -194,7 +194,7 @@ Ensure you have the following installed:
     - Authorization: `Bearer <jwt_token>`
   ```json
   {
-    "prevPriority": "0|100000:" //it's optional, the value is the priority of the previous todoListItem
+    "prevPriority": "0|100000:" //it's optional, the value is the priority of the previous todoListItem. If an amount is sent, the desired item will be moved to the first of the list
   }
   ```
 
