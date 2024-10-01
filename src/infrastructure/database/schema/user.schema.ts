@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { ITodoList } from 'src/domain/entities/todo-list.entity';
 import { IUser } from 'src/domain/entities/user.entity';
 
@@ -11,7 +11,7 @@ export class User extends Document implements IUser {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: Object, default: [], ref: 'TodoList' })
+  @Prop({ type: [Types.ObjectId], default: [], ref: 'TodoList' })
   lists: ITodoList[];
 }
 

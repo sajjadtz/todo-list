@@ -1,0 +1,20 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "verbose": true,
+  "silent": false,
+  "rootDir": "..",
+  "testEnvironment": "node",
+  "testRegex": "(.*).e2e-spec.ts$",
+  "maxWorkers": 1,
+  "modulePaths": ["./"],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleDirectories": ["node_modules"],
+  "collectCoverage": false,
+  "coverageProvider": "v8",
+  "testPathIgnorePatterns": [],
+  "forceExit": true,
+  "detectOpenHandles": true,
+  "testTimeout": 15000
+}

@@ -5,6 +5,7 @@ import { ErrorFilter } from './shared/filter/error.filter';
 import { SerializerInterceptor } from './shared/interceptor/serializer.interceptor';
 import { GlobalValidationPipe } from './shared/pipes/global-validation.pipe';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,11 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ErrorFilter());
   app.useGlobalFilters(new HttpErrorFilter());
-
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+    prefix: 'api/v',
+  });
   const document = new DocumentBuilder()
     .setTitle('todo-list')
     .setDescription('description')

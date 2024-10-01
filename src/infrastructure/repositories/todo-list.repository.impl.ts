@@ -5,6 +5,7 @@ import { ITodoListRepository } from 'src/domain/repositories/todo-list.repositor
 import { TodoList } from '../database/schema/todo-list.schema';
 import { ITodoList } from 'src/domain/entities/todo-list.entity';
 import { IUser } from 'src/domain/entities/user.entity';
+import { NotFoundException } from 'src/shared/exceptions/not-found.exception';
 
 @Injectable()
 export class TodoListRepositoryImpl implements ITodoListRepository {
@@ -13,21 +14,23 @@ export class TodoListRepositoryImpl implements ITodoListRepository {
   ) {}
 
   async findById(id: string | number): Promise<ITodoList> {
-    return (
-      await this.todoListModel.findOne(
-        {
-          _id: id,
-        },
-        {},
-        {
-          populate: [
-            {
-              path: 'items',
-            },
-          ],
-        },
-      )
-    ).toJSON();
+    const result = await this.todoListModel.findOne(
+      {
+        _id: id,
+      },
+      {},
+      {
+        populate: [
+          {
+            path: 'items',
+          },
+        ],
+      },
+    );
+
+    if (!result) throw new NotFoundException();
+
+    return result.toJSON();
   }
 
   async create({
@@ -57,6 +60,8 @@ export class TodoListRepositoryImpl implements ITodoListRepository {
       },
       { new: true },
     );
+
+    if (!result) throw new NotFoundException();
 
     return result.toJSON();
   }
