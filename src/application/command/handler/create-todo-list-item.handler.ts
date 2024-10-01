@@ -6,6 +6,7 @@ import { ITodoListItemRepository } from 'src/domain/repositories/todo-list-item.
 import { ITodoListItem } from 'src/domain/entities/todo-list-item.entity';
 import { IUser } from 'src/domain/entities/user.entity';
 import { LexoRank } from 'lexorank';
+import { ForbiddenException } from 'src/shared/exceptions/forbidden.exception';
 
 @CommandHandler(CreateTodoListItemCommand)
 export class CreateTodoListItemHandler
@@ -52,6 +53,6 @@ export class CreateTodoListItemHandler
       return;
     }
 
-    throw 'forbidden resource';
+    throw new ForbiddenException();
   }
 }

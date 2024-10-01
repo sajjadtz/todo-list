@@ -4,6 +4,7 @@ import { ITodoList } from 'src/domain/entities/todo-list.entity';
 import { ITodoListRepository } from 'src/domain/repositories/todo-list.repository';
 import { FindTodoListByIdQuery } from '../interface/find-todo-list-by-id.query';
 import { IUser } from 'src/domain/entities/user.entity';
+import { ForbiddenException } from 'src/shared/exceptions/forbidden.exception';
 
 @QueryHandler(FindTodoListByIdQuery)
 export class FindTodoListByIdHandler
@@ -15,7 +16,7 @@ export class FindTodoListByIdHandler
   async execute({ id, user }: { id: string; user: IUser }): Promise<ITodoList> {
     const result = await this.todoListRepository.findById(id);
 
-    if (result.user.id !== user.id) throw 'forbidden resource';
+    if (result.user.id !== user.id) throw new ForbiddenException();
 
     result.items = (result.items ?? []).sort((a, b) =>
       a.priority > b.priority ? 1 : -1,

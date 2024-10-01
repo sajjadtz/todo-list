@@ -5,8 +5,15 @@
   Inject,
   Logger,
   HttpException,
+  ForbiddenException,
+  NotFoundException,
+  UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { HttpErrorFilter } from './http-error.filter';
+import { BaseException } from '../exceptions/base.exception';
+import { CodeError } from '../enum/code-error.enum';
+import { MongoServerError } from 'mongodb';
 
 @Catch()
 export class ErrorFilter extends HttpErrorFilter {
@@ -29,15 +36,28 @@ export class ErrorFilter extends HttpErrorFilter {
         .split('(')[0]
         .trim();
     status = (error as any).status;
-    const [sourceClass, sourceMethod] = source?.split('.');
-    if (error instanceof HttpException) {
-      return super.catch(error, host);
+
+    if (error instanceof BaseException) {
+      switch (error.code) {
+        case CodeError.FORBIDDEN:
+          return super.catch(new ForbiddenException(), host);
+
+        case CodeError.NOT_FOUND:
+          return super.catch(new NotFoundException(), host);
+
+        case CodeError.UNAUTHORIZED:
+          return super.catch(new UnauthorizedException(), host);
+
+        default:
+          break;
+      }
+    } else if (error instanceof MongoServerError) {
+      return super.catch(new BadRequestException(error), host);
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Internal server error';
     }
     const context = host.switchToHttp();
-    const request = context.getRequest<Request>();
 
     const response = context.getResponse();
     this.logger.error(error);

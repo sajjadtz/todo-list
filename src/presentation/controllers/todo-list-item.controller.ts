@@ -18,8 +18,10 @@ import { UpdateTodoItemDto } from '../dto/todo-list-item/update-todo-list-item.d
 import { DeleteTodoListItemCommand } from 'src/application/command/interface/delete-todo-list-item.command';
 import { MoveTodoItemDto } from '../dto/todo-list-item/move-todo-list-item.dto';
 import { MoveTodoListItemCommand } from 'src/application/command/interface/move-todo-list-item.command';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 
 @Controller('todo-list-item')
+@ApiBearerAuth()
 export class TodoListItemController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -46,6 +48,7 @@ export class TodoListItemController {
 
   @Patch('/:id')
   @UseGuards(JwtAuthGuard)
+  @ApiParam({ name: 'id' })
   async updateTodoListItem(
     @Param('id') id: string,
     @Body() todoListItem: UpdateTodoItemDto,
@@ -61,12 +64,14 @@ export class TodoListItemController {
 
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
+  @ApiParam({ name: 'id' })
   async deleteTodoListItem(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new DeleteTodoListItemCommand(id));
   }
 
   @Post('/:id/move')
   @UseGuards(JwtAuthGuard)
+  @ApiParam({ name: 'id' })
   async moveTodoListItem(
     @Param('id') id: string,
     @Body() moveItem: MoveTodoItemDto,

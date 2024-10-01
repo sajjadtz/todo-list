@@ -10,6 +10,8 @@ import { ConfigService } from '@nestjs/config';
 import { AppConfigs } from 'src/shared/configs/app-configs';
 import { AppConfig } from 'src/shared/configs/interfaces/app-config.interface';
 import * as jwt from 'jsonwebtoken';
+import { UnauthorizedException } from 'src/shared/exceptions/unauthorized.exception';
+import { NotFoundException } from 'src/shared/exceptions/not-found.exception';
 
 @Injectable()
 export class UserRepositoryImpl implements IUserRepository {
@@ -19,19 +21,21 @@ export class UserRepositoryImpl implements IUserRepository {
   ) {}
 
   async getUserByUsername({ username }: { username: string }): Promise<IUser> {
-    return (
-      await this.userModel.findOne(
-        { username },
-        {},
-        {
-          populate: [
-            {
-              path: 'lists',
-            },
-          ],
-        },
-      )
-    ).toJSON();
+    const result = await this.userModel.findOne(
+      { username },
+      {},
+      {
+        populate: [
+          {
+            path: 'lists',
+          },
+        ],
+      },
+    );
+
+    if (!result) throw new NotFoundException();
+
+    return result?.toJSON();
   }
 
   async signUp({ user }: { user: Omit<IUser, 'lists'> }): Promise<void> {
@@ -55,7 +59,7 @@ export class UserRepositoryImpl implements IUserRepository {
     const user = await this.getUserByUsername({ username });
 
     if (!user || !(await compare(password, user.password))) {
-      throw 'unauthorized';
+      throw new UnauthorizedException();
     }
 
     const { secret, tokenExpireTime } = this.configService.get<AppConfig>(

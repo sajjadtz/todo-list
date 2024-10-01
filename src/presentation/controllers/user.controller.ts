@@ -7,6 +7,7 @@ import { LoginQuery } from 'src/application/query/interface/login-user.query';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 import { IUser } from 'src/domain/entities/user.entity';
 import { CurrentUser } from 'src/shared/decorator/current-user.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 export class UserController {
@@ -17,6 +18,7 @@ export class UserController {
 
   @Get('/')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async findByUsername(@CurrentUser() user: IUser): Promise<UserDto> {
     return user;
   }

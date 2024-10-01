@@ -18,8 +18,9 @@ import { CreateTodoListQuery } from 'src/application/query/interface/create-todo
 import { UpdateTodoListQuery } from 'src/application/query/interface/update-todo-list.query';
 import { TodoListDto } from '../dto/todo-list/todo-list.dto';
 import { FindTodoListByIdQuery } from 'src/application/query/interface/find-todo-list-by-id.query';
-
+import { ApiParam, ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 @Controller('todo-list')
+@ApiBearerAuth()
 export class TodoListController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -28,21 +29,22 @@ export class TodoListController {
 
   @Get('/:id')
   @UseGuards(JwtAuthGuard)
+  @ApiParam({ name: 'id' })
+  @ApiOkResponse({ type: TodoListDto })
   async getTodoList(
     @Param('id') id: string,
     @CurrentUser() user: IUser,
   ): Promise<TodoListDto> {
-    return await this.queryBus.execute(
-      new FindTodoListByIdQuery(id, user),
-    );
+    return await this.queryBus.execute(new FindTodoListByIdQuery(id, user));
   }
 
   @Post('/')
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: TodoListDto })
   async createTodoList(
     @Body() todoList: CreateTodoListDto,
     @CurrentUser() user: IUser,
-  ): Promise<void> {
+  ): Promise<TodoListDto> {
     return await this.queryBus.execute(
       new CreateTodoListQuery({
         title: todoList.title,
@@ -52,7 +54,9 @@ export class TodoListController {
   }
 
   @Patch('/:id')
+  @ApiParam({ name: 'id' })
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: TodoListDto })
   async updateTodoList(
     @Param('id') id: string,
     @Body() todoList: CreateTodoListDto,
